@@ -53,12 +53,20 @@
         new codefest.Asset('assets/thumb.png'),
     ];
 
-    function draw(frame){
+    function draw(frame, frame_index){
+        frame_index = frame_index || 0;
         var bird = assets[0].image;
         context.fillRect(0, 0, canvas.width, canvas.height);
         var w = bird.width;
         var h = bird.height/4;
-        context.drawImage(bird, 0, h * 0, w, h, frame.bird.x, frame.bird.y, w, h);
+        var flap = Math.floor(frame_index / 10) % 4;
+        context.drawImage(bird, 0, h * flap, w, h, frame.bird.x, frame.bird.y, w, h);
     };
-    draw(frame);
+
+    var frame_index = 0;
+    var tick = function(){
+        draw(frame, frame_index++);
+        requestAnimationFrame(tick);
+    };
+    tick();
 })(codefest = codefest || {});
