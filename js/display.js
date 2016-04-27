@@ -44,6 +44,7 @@
     Display.prototype.draw = function(frame, frame_index){
         frame_index = frame_index || 0;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.draw_land(frame, frame_index);
         this.draw_bird(frame, frame_index);
     };
     Display.prototype.draw_bird = function(frame, frame_index){
@@ -52,5 +53,13 @@
         var h = bird.height/4;
         var flap = Math.floor(frame_index / 10) % 4;
         this.context.drawImage(bird, 0, h * flap, w, h, frame.bird.x, frame.bird.y, w, h);
+    };
+    Display.prototype.draw_land = function(frame, frame_index){
+        var land = assets['land'].image;
+        var w = land.width;
+        var h = land.height;
+            this.context.drawImage(land, tile_index * w - 0, this.canvas.height - h);
+        [0, 1, 2].forEach(function(tile_index){
+       }.bind(this));
     };
 })(codefest = codefest || {});
