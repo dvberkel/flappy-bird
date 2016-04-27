@@ -8,11 +8,12 @@
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     var frame = {
-        "bird": {
-            "x": canvas.width/2,
-            "y": canvas.height/2,
-            "vx": 1,
-            "vy": 0
+        'crashed': false,
+        'bird': {
+            'x': canvas.width/2,
+            'y': canvas.height/2,
+            'vx': 1,
+            'vy': 0
         }
     };
     var timeline = window.timeline = new codefest.Timeline(frame);
