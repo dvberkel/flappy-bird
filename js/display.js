@@ -44,6 +44,7 @@
     Display.prototype.draw = function(frame, frame_index){
         frame_index = frame_index || 0;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.draw_sky(frame, frame_index);
         this.draw_land(frame, frame_index);
         this.draw_bird(frame, frame_index);
     };
@@ -61,6 +62,16 @@
         var offset = frame.bird.x % w;
         [0, 1, 2].forEach(function(tile_index){
             this.context.drawImage(land, tile_index * w - offset, this.canvas.height - h);
+        }.bind(this));
+    };
+    Display.prototype.draw_sky = function(frame, frame_index){
+        var land = assets['sky'].image;
+        var w = land.width;
+        var h = land.height;
+        var x_offset = frame.bird.x % w;
+        var y_offset = assets['land'].image.height;
+        [0, 1, 2, 3].forEach(function(tile_index){
+            this.context.drawImage(land, tile_index * w - x_offset, this.canvas.height - y_offset - h);
        }.bind(this));
     };
 })(codefest = codefest || {});
