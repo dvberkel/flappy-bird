@@ -58,8 +58,9 @@
         var land = assets['land'].image;
         var w = land.width;
         var h = land.height;
-            this.context.drawImage(land, tile_index * w - 0, this.canvas.height - h);
+        var offset = frame.bird.x % w;
         [0, 1, 2].forEach(function(tile_index){
+            this.context.drawImage(land, tile_index * w - offset, this.canvas.height - h);
        }.bind(this));
     };
 })(codefest = codefest || {});
