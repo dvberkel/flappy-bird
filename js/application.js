@@ -5,7 +5,7 @@
     canvas.width = 640;
     canvas.height = 480;
     var context = canvas.getContext('2d');
-    context.fillRect(0, 0, 640, 480);
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
     var bird = new codefest.Asset('assets/bird.png');
     bird.on('ready', function(){
