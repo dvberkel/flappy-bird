@@ -18,10 +18,15 @@
     var timeline = window.timeline = new codefest.Timeline(frame);
     var display = new codefest.Display(canvas, context);
 
+    var flapped = false;
+    document.getElementsByTagName('body')[0].addEventListener('keypress', function(){
+        flapped = true;
+    });
     var tick = function(){
         display.draw(timeline);
-        timeline.next();
+        timeline.next(flapped);
         requestAnimationFrame(tick);
+        flapped = false;
     };
     tick();
 })(codefest = codefest || {});

@@ -13,14 +13,15 @@
     }
 
     var Timeline = $.Timeline = function(initial_frame, options){
-        this.options = extend(options, { 'gravity': -0.1 });
+        this.options = extend(options, { 'gravity': -0.1, dv: 5.0 });
         this.frames = [initial_frame];
         this.current = 0;
     };
-    Timeline.prototype.next = function(){
+    Timeline.prototype.next = function(flapped){
         var frame = this.frames[this.current];
+        var dv = flapped ? this.options.dv: 0;
         var vx = frame.bird.vx;
-        var vy = frame.bird.vy - this.options.gravity;
+        var vy = frame.bird.vy - this.options.gravity - dv;
         var x = frame.bird.x + vx;
         var y = frame.bird.y + vy;
         var next = {
