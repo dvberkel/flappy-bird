@@ -1,16 +1,34 @@
 (function($){
-    var Timeline = $.Timeline = function(initial_frame){
+    function extend(){
+        var result = {};
+        Array.prototype.slice.call(arguments, 0).forEach(function(options){
+            options = options || {};
+            for(var key in options) {
+                if (!(key in result)) {
+                    result[key] = options[key];
+                }
+            }
+        });
+        return result;
+    }
+
+    var Timeline = $.Timeline = function(initial_frame, options){
+        this.options = extend(options, { 'gravity': -0.1 });
         this.frames = [initial_frame];
         this.current = 0;
     };
     Timeline.prototype.next = function(){
         var frame = this.frames[this.current];
+        var vx = frame.bird.vx;
+        var vy = frame.bird.vy - this.options.gravity;
+        var x = frame.bird.x + vx;
+        var y = frame.bird.y + vy;
         var next = {
             'bird': {
-                'x': frame.bird.x + frame.bird.vx,
-                'y': frame.bird.y + frame.bird.vy,
-                'vx': frame.bird.vx,
-                'vy': frame.bird.vy
+                'x': x,
+                'y': y,
+                'vx': vx,
+                'vy': vy
             }
         };
         this.frames.push(next);
