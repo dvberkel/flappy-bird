@@ -8,7 +8,7 @@
     context.fillRect(0, 0, 640, 480);
 
     var bird = new codefest.Asset('assets/bird.png');
-    bird.image.onload = function(){
-        context.drawImage(bird.image, 0, 0);
-    };
+    bird.on('ready', function(){
+        context.drawImage(this.image, 0, 0);
+    });
 })(codefest = codefest || {});
