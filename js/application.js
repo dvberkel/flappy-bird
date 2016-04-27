@@ -1,4 +1,4 @@
-(function(){
+(function(codefest){
     console.log('Get Ready!');
 
     var canvas = document.getElementById('viewport');
@@ -12,4 +12,4 @@
     image.onload = function(){
         context.drawImage(image, 0, 0);
     };
-})();
+})(codefest = codefest || {});
