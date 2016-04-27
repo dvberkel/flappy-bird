@@ -45,8 +45,9 @@
     Display.prototype.initialize = function(){
         this.context.fillStyle = '#4ec0ca';
     };
-    Display.prototype.draw = function(frame, frame_index){
-        frame_index = frame_index || 0;
+    Display.prototype.draw = function(timeline){
+        var frame = timeline.peek();
+        var frame_index = timeline.current;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.draw_ceiling(frame, frame_index);
         this.draw_sky(frame, frame_index);
@@ -58,7 +59,7 @@
         var w = bird.width;
         var h = bird.height/4;
         var flap = Math.floor(frame_index / 10) % 4;
-        this.context.drawImage(bird, 0, h * flap, w, h, frame.bird.x, frame.bird.y, w, h);
+        this.context.drawImage(bird, 0, h * flap, w, h, this.canvas.width/2, frame.bird.y, w, h);
     };
     Display.prototype.draw_land = function(frame, frame_index){
         var land = assets['land'].image;
