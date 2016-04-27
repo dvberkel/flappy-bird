@@ -7,7 +7,7 @@
     var context = canvas.getContext('2d');
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    var frame = window.frame = {
+    var frame = {
         "bird": {
             "x": canvas.width/2,
             "y": canvas.height/2,
@@ -15,12 +15,12 @@
             "vy": 0
         }
     };
-
-    var frame_index = 0;
+    var timeline = window.timeline = new codefest.Timeline(frame);
     var display = new codefest.Display(canvas, context);
 
     var tick = function(){
-        display.draw(frame, frame_index++);
+        display.draw(timeline);
+        timeline.next();
         requestAnimationFrame(tick);
     };
     tick();
