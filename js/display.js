@@ -40,6 +40,10 @@
     var Display = $.Display = function(canvas, context){
         this.canvas = canvas;
         this.context = context;
+        this.initialize();
+    };
+    Display.prototype.initialize = function(){
+        this.context.fillStyle = '#4ec0ca';
     };
     Display.prototype.draw = function(frame, frame_index){
         frame_index = frame_index || 0;
