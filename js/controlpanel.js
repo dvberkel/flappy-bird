@@ -1,4 +1,8 @@
 (function($){
+    var charCodeFor = {
+        'r': 114
+    };
+
     var ControlPanel = $.ControlPanel = function(){
         document.body.addEventListener('keypress', this.receiver.bind(this));
         this.reset();
@@ -15,5 +19,8 @@
     };
     ControlPanel.prototype.spacePressed = function(){
         return this.pressed && this.charCode === 32;
+    };
+    ControlPanel.prototype.isPressed = function(key){
+        return this.pressed && this.charCode === charCodeFor[key];
     };
 })(codefest = codefest || {});
