@@ -1,26 +1,37 @@
 (function($){
-    var charCodeFor = {
-        'r': 114
+    var keyCodeFor = {
+        'r': 82
     };
 
     var ControlPanel = $.ControlPanel = function(){
-        document.body.addEventListener('keypress', this.receiver.bind(this));
+        var body = document.body;
+        body.addEventListener('keypress', this.receiver.bind(this));
+        body.addEventListener('keydown', this.down.bind(this));
+        body.addEventListener('keyup', this.up.bind(this));
         this.reset();
         this.pressed = false;
-        this.charCode = undefined;
+        this.keyCode = undefined;
+        this.currently_down = {};
     };
     ControlPanel.prototype.reset = function(){
         this.pressed = false;
-        this.charCode = undefined;
+        this.keyCode = undefined;
     };
     ControlPanel.prototype.receiver = function(event){
         this.pressed = true;
-        this.charCode = event.charCode;
+        this.keyCode = event.charCode;
     };
     ControlPanel.prototype.spacePressed = function(){
-        return this.pressed && this.charCode === 32;
+        return this.pressed && this.keyCode === 32;
     };
-    ControlPanel.prototype.isPressed = function(key){
-        return this.pressed && this.charCode === charCodeFor[key];
+    ControlPanel.prototype.isDown = function(key){
+
+        return this.currently_down[keyCodeFor[key]];
+    };
+    ControlPanel.prototype.down = function(event){
+        this.currently_down[event.keyCode] = true;
+    };
+    ControlPanel.prototype.up = function(event){
+        delete this.currently_down[event.keyCode];
     };
 })(codefest = codefest || {});
