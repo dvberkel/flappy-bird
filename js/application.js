@@ -20,8 +20,10 @@
     var display = new codefest.Display(canvas, context);
 
     var flapped = false;
-    document.body.addEventListener('keypress', function(){
-        flapped = true;
+    document.body.addEventListener('keypress', function(event){
+        if (event.charCode === 32) {
+            flapped = true;
+        }
     });
     var tick = function(){
         display.draw(timeline);
