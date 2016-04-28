@@ -52,14 +52,27 @@
         this.draw_ceiling(frame, frame_index);
         this.draw_sky(frame, frame_index);
         this.draw_land(frame, frame_index);
+        this.draw_future_birds(timeline);
         this.draw_bird(frame, frame_index);
     };
-    Display.prototype.draw_bird = function(frame, frame_index){
+    Display.prototype.draw_bird = function(frame, frame_index, drift){
         var bird = assets['bird'].image;
         var w = bird.width;
         var h = bird.height/4;
         var flap = Math.floor(frame_index / 10) % 4;
-        this.context.drawImage(bird, 0, h * flap, w, h, this.canvas.width/2, frame.bird.y, w, h);
+        var offset = drift? frame.bird.vx * frame_index: 0;
+        this.context.drawImage(bird, 0, h * flap, w, h, this.canvas.width/2 + offset, frame.bird.y, w, h);
+    };
+    Display.prototype.draw_future_birds = function(timeline){
+        var future = timeline.future();
+        if (future.length > 0) {
+            this.context.save();
+            this.context.globalAlpha = 0.1;
+            timeline.future().forEach(function(frame, frame_index){
+                this.draw_bird(frame, frame_index, true);
+            }.bind(this));
+            this.context.restore();
+        }
     };
     Display.prototype.draw_land = function(frame, frame_index){
         var land = assets['land'].image;

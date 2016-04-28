@@ -55,4 +55,7 @@
     Timeline.prototype.peek = function(){
         return this.frames[this.current];
     };
+    Timeline.prototype.future = function(){
+        return this.frames.slice(this.current + 1);
+    }
 })(codefest = codefest || {});
