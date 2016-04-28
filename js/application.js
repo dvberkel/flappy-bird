@@ -18,18 +18,13 @@
     };
     var timeline = window.timeline = new codefest.Timeline(frame);
     var display = new codefest.Display(canvas, context);
+    var controlPanel = new codefest.ControlPanel();
 
-    var flapped = false;
-    document.body.addEventListener('keypress', function(event){
-        if (event.charCode === 32) {
-            flapped = true;
-        }
-    });
     var tick = function(){
         display.draw(timeline);
-        timeline.next(flapped);
+        timeline.next(controlPanel.spacePressed());
         requestAnimationFrame(tick);
-        flapped = false;
+        controlPanel.reset();
     };
     tick();
 })(codefest = codefest || {});
