@@ -20,7 +20,7 @@
     var display = new codefest.Display(canvas, context);
 
     var flapped = false;
-    document.getElementsByTagName('body')[0].addEventListener('keypress', function(){
+    document.body.addEventListener('keypress', function(){
         flapped = true;
     });
     var tick = function(){
