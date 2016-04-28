@@ -32,6 +32,9 @@
             return;
         }
         if (frame.crashed) {return;}
+        if (flapped & this.current + 1 < this.frames.length) {
+            this.frames = this.frames.slice(0, this.current + 1);
+        }
         if (this.current + 1 >= this.frames.length){
             var dv = flapped ? this.options.dv: 0;
             var vx = frame.bird.vx;
@@ -57,5 +60,5 @@
     };
     Timeline.prototype.future = function(){
         return this.frames.slice(this.current + 1);
-    }
+    };
 })(codefest = codefest || {});
