@@ -25,25 +25,31 @@
         this.frames = [initial_frame];
         this.current = 0;
     };
-    Timeline.prototype.next = function(flapped){
+    Timeline.prototype.next = function(flapped, back_in_time){
         var frame = this.frames[this.current];
+        if (back_in_time) {
+            this.current = Math.max(this.current - 1, 0);
+            return;
+        }
         if (frame.crashed) {return;}
-        var dv = flapped ? this.options.dv: 0;
-        var vx = frame.bird.vx;
-        var vy = frame.bird.vy - this.options.gravity - dv;
-        var x = frame.bird.x + vx;
-        var y = frame.bird.y + vy;
-        var crashed = y < this.options.ceiling || (y + this.options.r) > this.options.ground;
-        var next = {
-            'crashed': crashed,
-            'bird': {
-                'x': x,
-                'y': y,
-                'vx': vx,
-                'vy': vy
-            }
-        };
-        this.frames.push(next);
+        if (this.current + 1 >= this.frames.length){
+            var dv = flapped ? this.options.dv: 0;
+            var vx = frame.bird.vx;
+            var vy = frame.bird.vy - this.options.gravity - dv;
+            var x = frame.bird.x + vx;
+            var y = frame.bird.y + vy;
+            var crashed = y < this.options.ceiling || (y + this.options.r) > this.options.ground;
+            var next = {
+                'crashed': crashed,
+                'bird': {
+                    'x': x,
+                    'y': y,
+                    'vx': vx,
+                    'vy': vy
+                }
+            };
+            this.frames.push(next);
+        }
         this.current++;
     };
     Timeline.prototype.peek = function(){

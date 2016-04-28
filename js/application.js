@@ -22,7 +22,7 @@
 
     var tick = function(){
         display.draw(timeline);
-        timeline.next(controlPanel.spacePressed());
+        timeline.next(controlPanel.spacePressed(), controlPanel.isDown('r'));
         requestAnimationFrame(tick);
         controlPanel.reset();
     };
