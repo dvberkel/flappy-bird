@@ -23,6 +23,7 @@
                               { 'ceiling': ceiling, 'ground': ground, 'r': bird_radius }
                              );
         this.frames = [initial_frame];
+        this.pipes = [];
         this.current = 0;
     };
     Timeline.prototype.next = function(flapped, back_in_time){
