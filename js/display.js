@@ -49,8 +49,9 @@
         var frame = timeline.peek();
         var frame_index = timeline.current;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.draw_ceiling(frame, frame_index);
         this.draw_sky(frame, frame_index);
+        this.draw_pipes(frame, frame_index, timeline.pipes);
+        this.draw_ceiling(frame, frame_index);
         this.draw_land(frame, frame_index);
         this.draw_future_birds(timeline);
         this.draw_bird(frame, frame_index);
@@ -82,6 +83,20 @@
         [0, 1, 2].forEach(function(tile_index){
             this.context.drawImage(land, tile_index * w - offset, this.canvas.height - h);
         }.bind(this));
+    };
+    Display.prototype.draw_pipes = function(frame, frame_index, pipes){
+        var pipe_top_height = 25;
+        var pipe_gap = 40;
+        var pipe_up = assets['pipe-up'].image;
+        var pipe_image = assets['pipe'].image;
+        var pipe_down = assets['pipe-down'].image;
+        var delta = frame.bird.vx * frame_index;
+        pipes.forEach(function(pipe){
+            this.context.drawImage(pipe_image, 0, 0, pipe_image.width, pipe_image.height, pipe.x - delta, 0, pipe_image.width, pipe.y - pipe_gap);
+            this.context.drawImage(pipe_image, 0, 0, pipe_image.width, pipe_image.height, pipe.x - delta, pipe.y + pipe_gap, pipe_image.width, this.canvas.height - pipe.y + pipe_gap);
+           this.context.drawImage(pipe_down, 0, 0, pipe_down.width, pipe_down.height, pipe.x - delta, pipe.y - pipe_gap - pipe_top_height, pipe_down.width, pipe_top_height);
+            this.context.drawImage(pipe_up, 0, 0, pipe_up.width, pipe_up.height, pipe.x - delta, pipe.y + pipe_gap, pipe_up.width, pipe_top_height);
+                    }.bind(this));
     };
     Display.prototype.draw_sky = function(frame, frame_index){
         var sky = assets['sky'].image;
