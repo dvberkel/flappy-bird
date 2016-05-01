@@ -37,6 +37,78 @@
         'thumb': new codefest.Asset('assets/thumb.png')
     };
 
+    var BirdArtist = function(drift){
+        this.bird = assets['bird'].image;
+        this.w = this.bird.width;
+        this.h = this.bird.height/4;
+        this.drift = drift;
+    };
+    BirdArtist.prototype.draw = function(canvas, context, frame, frame_index, timeline){
+        var flap = Math.floor(frame_index / 10) % 4;
+        var offset = this.drift ? frame.bird.vx * frame_index: 0;
+        context.drawImage(this.bird,
+                          0, this.h * flap, this.w, this.h,
+                          canvas.width/2 + offset, frame.bird.y, this.w, this.h);
+    };
+
+    var FutureBirdsArtist = function(){
+        this.birdArtist = new BirdArtist(true);
+    };
+    FutureBirdsArtist.prototype.draw = function(canvas, context, frame, frame_index, timeline){
+        var future = timeline.future();
+        if (future.length > 0) {
+            context.save();
+            context.globalAlpha = 0.1;
+            future.forEach(function(frame, frame_index){
+                this.birdArtist.draw(canvas, context, frame, frame_index, timeline);
+            }.bind(this));
+            context.restore();
+        }
+    };
+
+    function range(up_to){
+        var result = [];
+        for (var index = 0; index < up_to; index++){
+            result.push(index);
+        }
+        return result;
+    }
+
+    var TiledArtist = function(asset, repeat, y_offset){
+        this.image = asset.image;
+        this.w = this.image.width;
+        this.h = this.image.height;
+        this.range = range(repeat);
+        this.y_offset = y_offset || 0;
+    };
+    TiledArtist.prototype.draw = function(canvas, context, frame, frame_index, timeline){
+        var x_offset = frame.bird.vx * frame_index % this.w;
+        this.range.forEach(function(tile_index){
+            context.drawImage(this.image,
+                              tile_index * this.w - x_offset,
+                              this.y_offset - this.h);
+        }.bind(this));
+    };
+
+    var PipeArtist = function(){
+        /* wait for it */
+    };
+    PipeArtist.prototype.draw = function(canvas, context, frame, frame_index, timeline){
+        var pipe_top_height = 25;
+        var pipe_gap = 40;
+        var pipe_up = assets['pipe-up'].image;
+        var pipe_image = assets['pipe'].image;
+        var pipe_down = assets['pipe-down'].image;
+        var delta = frame.bird.vx * frame_index;
+        timeline.pipes.forEach(function(pipe){
+            context.drawImage(pipe_image, 0, 0, pipe_image.width, pipe_image.height, pipe.x - delta, 0, pipe_image.width, pipe.y - pipe_gap);
+            context.drawImage(pipe_image, 0, 0, pipe_image.width, pipe_image.height, pipe.x - delta, pipe.y + pipe_gap, pipe_image.width, canvas.height - pipe.y + pipe_gap);
+            context.drawImage(pipe_down, 0, 0, pipe_down.width, pipe_down.height, pipe.x - delta, pipe.y - pipe_gap - pipe_top_height, pipe_down.width, pipe_top_height);
+            context.drawImage(pipe_up, 0, 0, pipe_up.width, pipe_up.height, pipe.x - delta, pipe.y + pipe_gap, pipe_up.width, pipe_top_height);
+        }.bind(this));
+    };
+
+
     var Display = $.Display = function(canvas, context){
         this.canvas = canvas;
         this.context = context;
@@ -49,72 +121,11 @@
         var frame = timeline.peek();
         var frame_index = timeline.current;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.draw_sky(frame, frame_index);
-        this.draw_pipes(frame, frame_index, timeline);
-        this.draw_ceiling(frame, frame_index);
-        this.draw_land(frame, frame_index);
-        this.draw_future_birds(timeline);
-        this.draw_bird(frame, frame_index);
-    };
-    Display.prototype.draw_bird = function(frame, frame_index, drift){
-        var bird = assets['bird'].image;
-        var w = bird.width;
-        var h = bird.height/4;
-        var flap = Math.floor(frame_index / 10) % 4;
-        var offset = drift? frame.bird.vx * frame_index: 0;
-        this.context.drawImage(bird, 0, h * flap, w, h, this.canvas.width/2 + offset, frame.bird.y, w, h);
-    };
-    Display.prototype.draw_future_birds = function(timeline){
-        var future = timeline.future();
-        if (future.length > 0) {
-            this.context.save();
-            this.context.globalAlpha = 0.1;
-            timeline.future().forEach(function(frame, frame_index){
-                this.draw_bird(frame, frame_index, true);
-            }.bind(this));
-            this.context.restore();
-        }
-    };
-    Display.prototype.draw_land = function(frame, frame_index){
-        var land = assets['land'].image;
-        var w = land.width;
-        var h = land.height;
-        var offset = frame.bird.x % w;
-        [0, 1, 2].forEach(function(tile_index){
-            this.context.drawImage(land, tile_index * w - offset, this.canvas.height - h);
-        }.bind(this));
-    };
-    Display.prototype.draw_pipes = function(frame, frame_index, timeline){
-        var pipe_top_height = 25;
-        var pipe_gap = 40;
-        var pipe_up = assets['pipe-up'].image;
-        var pipe_image = assets['pipe'].image;
-        var pipe_down = assets['pipe-down'].image;
-        var delta = frame.bird.vx * frame_index;
-        timeline.pipes.forEach(function(pipe){
-            this.context.drawImage(pipe_image, 0, 0, pipe_image.width, pipe_image.height, pipe.x - delta, 0, pipe_image.width, pipe.y - pipe_gap);
-            this.context.drawImage(pipe_image, 0, 0, pipe_image.width, pipe_image.height, pipe.x - delta, pipe.y + pipe_gap, pipe_image.width, this.canvas.height - pipe.y + pipe_gap);
-           this.context.drawImage(pipe_down, 0, 0, pipe_down.width, pipe_down.height, pipe.x - delta, pipe.y - pipe_gap - pipe_top_height, pipe_down.width, pipe_top_height);
-            this.context.drawImage(pipe_up, 0, 0, pipe_up.width, pipe_up.height, pipe.x - delta, pipe.y + pipe_gap, pipe_up.width, pipe_top_height);
-                    }.bind(this));
-    };
-    Display.prototype.draw_sky = function(frame, frame_index){
-        var sky = assets['sky'].image;
-        var w = sky.width;
-        var h = sky.height;
-        var x_offset = frame.bird.x % w;
-        var y_offset = assets['land'].image.height;
-        [0, 1, 2, 3].forEach(function(tile_index){
-            this.context.drawImage(sky, tile_index * w - x_offset, this.canvas.height - y_offset - h);
-       }.bind(this));
-    };
-    Display.prototype.draw_ceiling = function(frame, frame_index){
-        var ceiling = assets['ceiling'].image;
-        var w = ceiling.width;
-        var h = ceiling.height;
-        var offset = frame.bird.x % w;
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach(function(tile_index){
-            this.context.drawImage(ceiling, tile_index * w - offset, 0);
-        }.bind(this));
+        (new TiledArtist(assets['sky'], 4, this.canvas.height - assets['land'].image.height)).draw(this.canvas, this.context, frame, frame_index, timeline);
+        (new PipeArtist()).draw(this.canvas, this.context, frame, frame_index, timeline);
+        (new TiledArtist(assets['ceiling'], 11, assets['ceiling'].image.height)).draw(this.canvas, this.context, frame, frame_index, timeline);
+        (new TiledArtist(assets['land'], 3, this.canvas.height)).draw(this.canvas, this.context, frame, frame_index, timeline);
+        (new FutureBirdsArtist()).draw(this.canvas, this.context, frame, frame_index, timeline);
+        (new BirdArtist()).draw(this.canvas, this.context, frame, frame_index, timeline);
     };
 })(codefest = codefest || {});
