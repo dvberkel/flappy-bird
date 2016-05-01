@@ -108,24 +108,27 @@
         }.bind(this));
     };
 
-
     var Display = $.Display = function(canvas, context){
         this.canvas = canvas;
         this.context = context;
+        this.artists = [];
         this.initialize();
     };
     Display.prototype.initialize = function(){
         this.context.fillStyle = '#4ec0ca';
+        this.artists.push(new TiledArtist(assets['sky'], 4, this.canvas.height - assets['land'].image.height));
+        this.artists.push(new PipeArtist());
+        this.artists.push(new TiledArtist(assets['ceiling'], 11, assets['ceiling'].image.height));
+        this.artists.push(new TiledArtist(assets['land'], 3, this.canvas.height));
+        this.artists.push(new FutureBirdsArtist());
+        this.artists.push(new BirdArtist());
     };
     Display.prototype.draw = function(timeline){
         var frame = timeline.peek();
         var frame_index = timeline.current;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        (new TiledArtist(assets['sky'], 4, this.canvas.height - assets['land'].image.height)).draw(this.canvas, this.context, frame, frame_index, timeline);
-        (new PipeArtist()).draw(this.canvas, this.context, frame, frame_index, timeline);
-        (new TiledArtist(assets['ceiling'], 11, assets['ceiling'].image.height)).draw(this.canvas, this.context, frame, frame_index, timeline);
-        (new TiledArtist(assets['land'], 3, this.canvas.height)).draw(this.canvas, this.context, frame, frame_index, timeline);
-        (new FutureBirdsArtist()).draw(this.canvas, this.context, frame, frame_index, timeline);
-        (new BirdArtist()).draw(this.canvas, this.context, frame, frame_index, timeline);
+        this.artists.forEach(function(artist){
+            artist.draw(this.canvas, this.context, frame, frame_index, timeline);
+        }.bind(this));
     };
 })(codefest = codefest || {});
