@@ -94,18 +94,9 @@
         /* wait for it */
     };
     PipeArtist.prototype.draw = function(canvas, context, frame, frame_index, timeline){
-        var pipe_top_height = 25;
-        var pipe_gap = 40;
-        var pipe_up = assets['pipe-up'].image;
-        var pipe_image = assets['pipe'].image;
-        var pipe_down = assets['pipe-down'].image;
-        var delta = frame.bird.vx * frame_index;
         timeline.pipes.forEach(function(pipe){
-            context.drawImage(pipe_image, 0, 0, pipe_image.width, pipe_image.height, pipe.x - delta, 0, pipe_image.width, pipe.y - pipe_gap);
-            context.drawImage(pipe_image, 0, 0, pipe_image.width, pipe_image.height, pipe.x - delta, pipe.y + pipe_gap, pipe_image.width, canvas.height - pipe.y + pipe_gap);
-            context.drawImage(pipe_down, 0, 0, pipe_down.width, pipe_down.height, pipe.x - delta, pipe.y - pipe_gap - pipe_top_height, pipe_down.width, pipe_top_height);
-            context.drawImage(pipe_up, 0, 0, pipe_up.width, pipe_up.height, pipe.x - delta, pipe.y + pipe_gap, pipe_up.width, pipe_top_height);
-        }.bind(this));
+            pipe.draw(canvas, context, frame, frame_index, timeline);
+       });
     };
 
     var Display = $.Display = function(canvas, context){
