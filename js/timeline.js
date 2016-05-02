@@ -1,24 +1,11 @@
 (function($){
-    function extend(){
-        var result = {};
-        Array.prototype.slice.call(arguments, 0).forEach(function(options){
-            options = options || {};
-            for(var key in options) {
-                if (!(key in result)) {
-                    result[key] = options[key];
-                }
-            }
-        });
-        return result;
-    }
-
     var ceiling = 16;
     var canvas_height = 480;
     var land_height = 112;
     var ground = canvas_height - land_height;
     var bird_radius = 96/4;
     var Timeline = $.Timeline = function(initial_frame, options){
-        this.options = extend(options,
+        this.options = $.extend(options,
                               { 'gravity': -0.1, dv: 5.0 },
                               { 'ceiling': ceiling, 'ground': ground, 'r': bird_radius }
                              );
