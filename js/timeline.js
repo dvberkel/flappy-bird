@@ -29,7 +29,7 @@
             var vy = frame.bird.vy - this.options.gravity - dv;
             var x = frame.bird.x + vx;
             var y = frame.bird.y + vy;
-            var crashed = y < this.options.ceiling || (y + this.options.r) > this.options.ground;
+            var crashed = y < this.options.ceiling || (y + this.options.r) > this.options.ground || this.pipe_crash(x, y);
             var next = {
                 'crashed': crashed,
                 'bird': {
@@ -42,6 +42,15 @@
             this.frames.push(next);
         }
         this.current++;
+    };
+    Timeline.prototype.pipe_crash = function(x, y){
+        var collisions = this.pipes.filter(function(pipe){
+            return pipe.contains(x, y) ||
+                pipe.contains(x + this.options.r, y) ||
+                pipe.contains(x, y + this.options.r) ||
+                pipe.contains(x + this.options.r, y + this.options.r);
+        }.bind(this));
+        return collisions.length > 0;
     };
     Timeline.prototype.peek = function(){
         return this.frames[this.current];

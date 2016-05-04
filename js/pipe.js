@@ -6,32 +6,41 @@
     var Pipe = $.Pipe = function(x, y, options){
         this.options = $.extend(options || {}, {
             'pipe_top_height': 25,
-            'pipe_gap': 40
+            'pipe_gap': 40,
+            'height': 480
         });
         this.x = x;
         this.y = y;
     };
     Pipe.prototype.draw = function(canvas, context, frame, frame_index, timeline){
-        var bb = this.bounding_box(canvas, context, frame, frame_index, timeline);
+        var bb = this.bounding_box(frame, frame_index);
         this.draw_pipe_down(context, bb.down);
         this.draw_pipe_up(context, bb.up);
     };
-    Pipe.prototype.bounding_box = function(canvas, context, frame, frame_index, timeline){
-        var delta = frame.bird.vx * frame_index;
-       return {
-           'down': {
-               x: this.x - delta,
-               y: 0,
-               w: pipe_image_asset.image.width,
-               h: this.y - this.options.pipe_gap
-           },
-           'up': {
-               x: this.x - delta,
-               y: this.y + this.options.pipe_gap,
-               w: pipe_image_asset.image.width,
-               h: canvas.height - (this.y + this.options.pipe_gap)
-           }
+    Pipe.prototype.bounding_box = function(frame, frame_index){
+        var delta = 0;
+        if (frame && frame_index) { delta = frame.bird.vx * frame_index; } 
+        return {
+            'down': {
+                x: this.x - delta,
+                y: 0,
+                w: pipe_image_asset.image.width,
+                h: this.y - this.options.pipe_gap
+            },
+            'up': {
+                x: this.x - delta,
+                y: this.y + this.options.pipe_gap,
+                w: pipe_image_asset.image.width,
+                h: this.options.height - (this.y + this.options.pipe_gap)
+            }
         };
+    };
+    Pipe.prototype.contains = function(x, y){
+        var bb = this.bounding_box();
+        var up = bb.up;
+        var down = bb.down;
+        return (up.x <= x && x <= (up.x + up.w) && up.y <= y && y <= (up.y + up.h)) ||
+            (down.x <= x && x <= (down.x + down.w) && down.y <= y && y <= (down.y + down.h));
     };
     Pipe.prototype.draw_pipe_down = function(context, bb){
         var pipe_image = pipe_image_asset.image;
