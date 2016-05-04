@@ -6,8 +6,9 @@
     var bird_radius = 96/4;
     var Timeline = $.Timeline = function(initial_frame, options){
         this.options = $.extend(options,
-                              { 'gravity': -0.1, dv: 5.0 },
-                              { 'ceiling': ceiling, 'ground': ground, 'r': bird_radius }
+                                { 'gravity': -0.1, dv: 5.0 },
+                                { 'ceiling': ceiling, 'ground': ground, 'r': bird_radius },
+                                { 'minimal_pipe_offset': 400, 'minimum_pipe_height': 80, 'maximum_pipe_height': 300 }
                              );
         this.frames = [initial_frame];
         this.pipes = [];
@@ -22,6 +23,12 @@
         if (frame.crashed) {return;}
         if (flapped & this.current + 1 < this.frames.length) {
             this.frames = this.frames.slice(0, this.current + 1);
+        }
+        if (this.pipes.filter(function(pipe){ return pipe.x > frame.bird.x; }) == 0){
+            this.pipes.push(new $.Pipe(
+                frame.bird.x + this.options.minimal_pipe_offset,
+                this.options.minimum_pipe_height + Math.random() * (this.options.maximum_pipe_height - this.options.minimum_pipe_height)
+            ));
         }
         if (this.current + 1 >= this.frames.length){
             var dv = flapped ? this.options.dv: 0;
