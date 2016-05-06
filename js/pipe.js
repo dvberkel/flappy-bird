@@ -6,7 +6,7 @@
     var Pipe = $.Pipe = function(x, y, options){
         this.options = $.extend(options || {}, {
             'pipe_top_height': 25,
-            'pipe_gap': 40,
+            'pipe_gap': 50,
             'height': 480
         });
         this.x = x;
