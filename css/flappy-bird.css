@@ -1,0 +1,15 @@
+@import url(https://fonts.googleapis.com/css?family=Princess+Sofia);
+
+body {
+    font-family: 'Princess Sofia', cursive;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+canvas {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
