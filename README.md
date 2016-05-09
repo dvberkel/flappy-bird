@@ -7,6 +7,8 @@ Entry to the 2016 Devnology Flappy Bird Codefest
 
 ![Impression of Flappy Bird](https://upload.wikimedia.org/wikipedia/en/thumb/5/52/Flappy_Bird_gameplay.png/150px-Flappy_Bird_gameplay.png)
 
+Play [my clone](https://dvberkel.github.com/flappy-bird).
+
 ## Assets
 I do not own the assets, nor do I have explicit permission to use them from
 their creator. The are the work and copyright of original creator Dong Nguyen
